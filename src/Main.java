@@ -10,22 +10,30 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
         String playerMark = "O";
-        int playerRow = 2;
-        int playerCol = 2;
+        int playerRow = RANDOM.nextInt(WIDTH - 2) + 1;
+        int playerCol = RANDOM.nextInt(HEIGHT - 2) + 1;
         Direction playerDirection = Direction.RIGHT;
 
         String enemyMark = "-";
-        int enemyRow = 7;
-        int enemyCol = 4;
+        int enemyRow = RANDOM.nextInt(WIDTH - 2) + 1;
+        int enemyCol = RANDOM.nextInt(HEIGHT - 2) + 1;
+
         Direction enemyDirection = Direction.LEFT;
 
         //pálya inicializálása
         String[][] level = new String[HEIGHT][WIDTH];
         initLevel(level);
-        
-        addObstacles(level, 1, 1);
+
+        addObstacles(level, 3, 2);
 
         for (int iterationNumber = 1; iterationNumber <= GAME_LOOP_NUMBER; iterationNumber++){
+
+            if (iterationNumber == 1&&(playerRow + playerCol)-(enemyRow + enemyCol) < 5 || iterationNumber == 1&&(playerRow + playerCol)-(enemyRow + enemyCol) > -5)
+            {
+                enemyRow = RANDOM.nextInt(WIDTH - 2) + 1;
+                enemyCol = RANDOM.nextInt(HEIGHT - 2) + 1;
+            }
+
             //játékos léptetése
             if(iterationNumber % 15 == 0) {
                 playerDirection = changeDirection(playerDirection);
