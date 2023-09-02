@@ -17,8 +17,11 @@ public class Main {
         String enemyMark = "-";
         int enemyRow = RANDOM.nextInt(WIDTH - 2) + 1;
         int enemyCol = RANDOM.nextInt(HEIGHT - 2) + 1;
-
         Direction enemyDirection = Direction.LEFT;
+
+        String powerUPMark = "*";
+        int powerUPRow = RANDOM.nextInt(WIDTH - 2) + 1;
+        int powerUPCol = RANDOM.nextInt(HEIGHT - 2) + 1;
 
         //pálya inicializálása
         String[][] level = new String[HEIGHT][WIDTH];
@@ -28,7 +31,9 @@ public class Main {
 
         for (int iterationNumber = 1; iterationNumber <= GAME_LOOP_NUMBER; iterationNumber++){
 
-            if (iterationNumber == 1&&(playerRow + playerCol)-(enemyRow + enemyCol) < 5 || iterationNumber == 1&&(playerRow + playerCol)-(enemyRow + enemyCol) > -5)
+            if (level[enemyRow][enemyCol].equals("X") ||
+                    (iterationNumber < 3 && (playerRow + playerCol)-(enemyRow + enemyCol) < 6) ||
+                    (iterationNumber < 3 && (playerRow + playerCol)-(enemyRow + enemyCol) > -6))
             {
                 enemyRow = RANDOM.nextInt(WIDTH - 2) + 1;
                 enemyCol = RANDOM.nextInt(HEIGHT - 2) + 1;
@@ -45,13 +50,17 @@ public class Main {
 
 
             enemyDirection = changeEnemyDirection(level, enemyDirection, playerRow, playerCol, enemyRow, enemyCol);
-            if ( iterationNumber % 2 == 0) {
+            if (iterationNumber % 3 == 0) {
                 int[] enemyCoordinates = makeMove(enemyDirection, level, enemyRow, enemyCol);
                 enemyRow = enemyCoordinates[0];
                 enemyCol = enemyCoordinates[1];
             }
+            if (iterationNumber % 20 == 0) {
+                powerUPRow = RANDOM.nextInt(WIDTH - 2) + 1;
+                powerUPCol = RANDOM.nextInt(HEIGHT - 2) + 1;
+            }
 
-            draw(level, playerMark, playerRow, playerCol, enemyMark, enemyRow, enemyCol);
+            draw(level, playerMark, playerRow, playerCol, enemyMark, enemyRow, enemyCol, powerUPMark, powerUPRow, powerUPCol);
 
             addSomeDelay(300L, iterationNumber);
 
@@ -82,16 +91,16 @@ public class Main {
         return direction;
     }
     static Direction changeEnemyDirection(String [][] level, Direction originalEnemyDirection, int playerRow, int playerCol, int enemyRow, int enemyCol) {
-        if (playerRow > enemyRow && level[playerRow+1][playerCol].equals(" ")) {
+        if (playerRow > enemyRow && level[enemyRow+1][enemyCol].equals(" ")) {
             return Direction.DOWN;
         }
-        if (playerRow < enemyRow && level[playerRow-1][playerCol].equals(" ")) {
+        if (playerRow < enemyRow && level[enemyRow-1][enemyCol].equals(" ")) {
             return Direction.UP;
         }
-        if (playerCol > enemyCol && level[playerRow][playerCol+1].equals(" ")) {
+        if (playerCol > enemyCol && level[enemyRow][enemyCol+1].equals(" ")) {
             return Direction.RIGHT;
         }
-        if (playerCol < enemyCol && level[playerRow][playerCol-1].equals(" ")) {
+        if (playerCol < enemyCol && level[enemyRow][enemyCol-1].equals(" ")) {
             return Direction.LEFT;
         }
         return originalEnemyDirection;
@@ -121,7 +130,7 @@ public class Main {
         }
         return new int[]{ row, col };
     }
-    static void draw(String[][] level, String playerMark, int playerRow, int playerCol, String enemyMark, int enemyRow, int enemyCol) {
+    static void draw(String[][] level, String playerMark, int playerRow, int playerCol, String enemyMark, int enemyRow, int enemyCol, String powerUPMark, int powerUPRow, int powerUPCol) {
         //pálya és játékos kirajzolása
         for(int row = 0; row < HEIGHT; row++) {
             for(int col = 0; col < WIDTH; col++) {
@@ -129,6 +138,8 @@ public class Main {
                     System.out.print(playerMark);
                 } else if (row == enemyRow && col == enemyCol) {
                     System.out.print(enemyMark);
+                } else if (row == powerUPRow && col == powerUPCol) {
+                    System.out.print(powerUPMark);
                 } else {
                     System.out.print(level[row][col]);
                 }
