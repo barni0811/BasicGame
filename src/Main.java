@@ -28,7 +28,9 @@ public class Main {
 
         for (int iterationNumber = 1; iterationNumber <= GAME_LOOP_NUMBER; iterationNumber++){
 
-            if (iterationNumber == 1&&(playerRow + playerCol)-(enemyRow + enemyCol) < 5 || iterationNumber == 1&&(playerRow + playerCol)-(enemyRow + enemyCol) > -5)
+            if (level[enemyRow][enemyCol].equals("X")  ||
+                    (iterationNumber < 5 && (playerRow + playerCol)-(enemyRow + enemyCol) < 10) ||
+                    (iterationNumber < 5 && (playerRow + playerCol)-(enemyRow + enemyCol) > -10))
             {
                 enemyRow = RANDOM.nextInt(WIDTH - 2) + 1;
                 enemyCol = RANDOM.nextInt(HEIGHT - 2) + 1;
@@ -82,16 +84,16 @@ public class Main {
         return direction;
     }
     static Direction changeEnemyDirection(String [][] level, Direction originalEnemyDirection, int playerRow, int playerCol, int enemyRow, int enemyCol) {
-        if (playerRow > enemyRow && level[playerRow+1][playerCol].equals(" ")) {
+        if (playerRow > enemyRow && level[enemyRow+1][enemyCol].equals(" ")) {
             return Direction.DOWN;
         }
-        if (playerRow < enemyRow && level[playerRow-1][playerCol].equals(" ")) {
+        if (playerRow < enemyRow && level[enemyRow-1][enemyCol].equals(" ")) {
             return Direction.UP;
         }
-        if (playerCol > enemyCol && level[playerRow][playerCol+1].equals(" ")) {
+        if (playerCol > enemyCol && level[enemyRow][enemyCol+1].equals(" ")) {
             return Direction.RIGHT;
         }
-        if (playerCol < enemyCol && level[playerRow][playerCol-1].equals(" ")) {
+        if (playerCol < enemyCol && level[enemyRow][enemyCol-1].equals(" ")) {
             return Direction.LEFT;
         }
         return originalEnemyDirection;
@@ -137,7 +139,7 @@ public class Main {
         }
     }
     static void addSomeDelay(long timeout, int iterationNumber) throws InterruptedException {
-        System.out.println("--------  " + iterationNumber);
+        System.out.println("-------- " + iterationNumber);
         Thread.sleep(timeout);
     }
 
